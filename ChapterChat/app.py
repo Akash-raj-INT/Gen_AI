@@ -3,6 +3,7 @@ import os
 import tempfile
 
 import streamlit as st
+from streamlit.errors import StreamlitSecretNotFoundError
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -89,9 +90,18 @@ def get_embeddings():
 
 @st.cache_resource
 def get_llm():
-    if not os.getenv("GEMINI_API_KEY"):
-        raise RuntimeError("GEMINI_API_KEY is missing from the .env file.")
-    return ChatGoogleGenerativeAI(model="gemini-3.6-flash")
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        try:
+            api_key = st.secrets["GEMINI_API_KEY"]
+        except (KeyError, FileNotFoundError, StreamlitSecretNotFoundError):
+            api_key = None
+    if not api_key:
+        raise RuntimeError(
+            "GEMINI_API_KEY is missing. Add it to Streamlit Cloud Secrets "
+            "or your local .env file."
+        )
+    return ChatGoogleGenerativeAI(model="gemini-3.6-flash", google_api_key=api_key)
 
 
 def get_answer(response):
