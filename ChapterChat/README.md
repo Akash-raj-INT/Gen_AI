@@ -2,6 +2,12 @@
 
 ChapterChat is a Streamlit PDF question-answering app. Upload a book, build a local vector index, and ask questions with answers grounded in the document. It uses Google Gemini for responses, Hugging Face embeddings for semantic search, and Chroma for vector storage.
 
+## Live demo
+
+Try ChapterChat on Streamlit Community Cloud:
+
+<https://rrvtdh73jqf8n2kmwhhabn.streamlit.app/>
+
 ## Features
 
 - Upload and index PDF books from the Streamlit sidebar
